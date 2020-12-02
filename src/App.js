@@ -7,10 +7,15 @@ import './App.css';
 
 function App() {
   const [countries, setCountries] = useState([]);
-  const [country, setCountry] = useState('EastAfrica')
+  const [country, setCountry] = useState('EastAfrica');
+  const [countryInfo, setCountryInfo] = useState({});
 
   //STATE = How to write a variable in react
   //USE effect = Runs a piece of code base on a given condititon
+
+  useEffect(()=> {
+    
+  })
 
   useEffect(() => {
     //the code inside here will run once 
@@ -33,14 +38,106 @@ function App() {
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
 
-    //console.log("This is my country Now", countryCode);
+    console.log("This is my country Now", countryCode);
     setCountry(countryCode);
-    let url 
-    if (countryCode === 'EastAfrica') {
-      const EastAfricanDATA = async () => {
+   const url =
+     countryCode === "EastAfrica"
+       ? "https://disease.sh/v3/covid-19/countries/UG,KE,TZ,RW,BI"
+       : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
+    await fetch (url)
+    .then(response=> response.json())
+    .then(data => {
+      console.log(data.length);
+      if (data.length > 0 && data.length !== undefined) {
+         let todayCases = [];
+         let todayRecovered = [];
+         let todayDeaths = []
+        let cases = [];
+        let deaths = [];
+        let recovered = [];
+         for (let iteration = 0; iteration < data.length; iteration++) {
+           let totalIteration = iteration + 1;
+           todayCases.push(data[iteration].todayCases);
+          todayRecovered.push(data[iteration].todayRecovered);
+           todayDeaths.push(data[iteration].todayDeaths);
+           cases.push(data[iteration].cases);
+           deaths.push(data[iteration].deaths);
+           recovered.push(data[iteration].recovered);
 
+          console.log(iteration, data[iteration].cases);
+          if (totalIteration === data.length) {
+            const casesToday = todayCases.reduce((total, currentValue)=> {
+              console.log(total);
+              console.log('current', currentValue)
+              return total + currentValue
+            })
+
+            const casesRecovered = todayRecovered.reduce(
+              (total, currentValue) => {
+                console.log(total);
+                console.log("current", currentValue);
+                return total + currentValue;
+              }
+            );
+
+            const casesDeaths = todayDeaths.reduce((total, currentValue) => {
+              console.log(total);
+              console.log("current", currentValue);
+              return total + currentValue;
+            });
+
+            const casestotal = cases.reduce((total, currentValue) => {
+              console.log(total);
+              console.log("current cases", currentValue);
+              return total + currentValue;
+            });
+
+            const deathstotal = deaths.reduce((total, currentValue) => {
+              console.log(total);
+              console.log("current", currentValue);
+              return total + currentValue;
+            });
+             const recoveredtotal = recovered.reduce((total, currentValue) => {
+               console.log(total);
+               console.log("current", currentValue);
+               return total + currentValue;
+             });
+             let dataTotals = {
+               cases: casestotal,
+               recovered: recoveredtotal,
+               deaths: deathstotal,
+               todayCases: casesToday,
+               todayDeaths: casesDeaths,
+               todayRecovered: casesRecovered,
+             };
+
+            setCountry(countryCode);
+            setCountryInfo(dataTotals);
+             
+          }
+         }
+      } else {
+        console.log('this is data else where', data);
+        setCountry(countryCode);
+        setCountryInfo(data)
       }
-    }
+     
+    })
+    // if (countryCode === 'EastAfrica') {
+    //   // const EastAfricanData = async (coun1, coun2, coun3, coun4) => {
+    //   //   await fetch(
+    //   //     `https://disease.sh/v3/covid-19/countries/${coun1},${coun2},${coun3},${coun4}`
+    //   //   )
+    //   //     .then((response) => response.json())
+    //   //     .then((data) => {
+    //   //       console.log("all the data taking part", data);
+    //   //     });
+    //   // };
+    //   //  EastAfricanData('UG', 'TZ', 'RW', 'BI' );
+
+      
+      
+    // }
     //  https://disease.sh/v3/covid-19/all
     // https://disease.sh/v3/covid-19/countries/[COUNTRY_CODE]
   }
@@ -72,11 +169,23 @@ function App() {
         </div>
 
         <div className="app__stats">
-          <InfoBox title="Coronavirus cases" cases={500} total={2000} />
+          <InfoBox
+            title="Coronavirus cases"
+            cases={countryInfo.todayCases}
+            total={countryInfo.cases}
+          />
 
-          <InfoBox title="Recovered" cases={400} total={3000} />
+          <InfoBox
+            title="Recovered"
+            cases={countryInfo.todayRecovered}
+            total={countryInfo.recovered}
+          />
 
-          <InfoBox title="Deaths" cases={400} total={1000} />
+          <InfoBox
+            title="Deaths"
+            cases={countryInfo.todayDeaths}
+            total={countryInfo.deaths} 
+          />
           {/* InfoBoxes */}
           {/* InfoBoxes */}
           {/* InfoBoxes */}
@@ -87,14 +196,12 @@ function App() {
       </div>
 
       <Card className="app__right">
-
-          <CardContent>
+        <CardContent>
           <h3> Live Cases by Country</h3>
           {/* Table */}
           <h3>WorldWide new Cases</h3>
           {/* Graph */}
-
-          </CardContent>
+        </CardContent>
       </Card>
     </div>
   );
