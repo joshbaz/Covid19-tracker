@@ -22,7 +22,6 @@ function LineGraph() {
               
               if(allGeneralDates.length === 0) {
                   let propertyDate = Object.keys(dataToSplit);
-                  console.log('these are dates',propertyDate);
                   function getDataValues() {
                     let dataValues = []
                     for (const date of propertyDate) {
@@ -51,20 +50,45 @@ function LineGraph() {
                      burundiDataCases.push(burundiResults);
                   }
                 } else {
-                  return
+                  function getDataValues() {
+                   let  propertyDate = Object.keys(dataToSplit);
+                    let dataValues = [];
+                    for (const date of propertyDate) {
+                      console.log("these are spilt dataes", date);
+                      console.log("these are the numbers", dataToSplit[date]);
+                      dataValues.push(dataToSplit[date]);
+                    }
+                    return dataValues;
+                  }
+                  
+                  if (country === "Uganda") {
+                    let ugandaResults = getDataValues();
+                    ugandanDataCases.push(ugandaResults);
+                    console.log(" ugandanDataCases", ugandanDataCases);
+                  } else if (country === "Kenya") {
+                    let kenyaResults = getDataValues();
+                    kenyanDataCases.push(kenyaResults);
+                    console.log(" ukenyanDataCases", kenyanDataCases);
+                  } else if (country === "Tanzania") {
+                    let TanzaniaResults = getDataValues();
+                    tanzaniaDataCases.push(TanzaniaResults);
+                    console.log(" tanzaniaDataCases", tanzaniaDataCases);
+                  } else if (country === "Rwanda") {
+                    let rwandaResults = getDataValues();
+                    rwandaDataCases.push(rwandaResults);
+                    console.log("  rwandaDataCases", rwandaDataCases);
+                  } else if (country === "Burundi") {
+                    let burundiResults = getDataValues();
+                    burundiDataCases.push(burundiResults);
+                    console.log("  burundiDataCases", burundiDataCases);
+                  }
                 }
-              // for (const data of dataToSpilt) {
-              //   if(allGeneralDates.length === 0) {
-              //     let propertyDate = Object.keys(data);
-              //     console.log('these are dates',propertyDate);
-              //   } else {
-              //     return
-              //   }
-              // }
+              
             }
 
            function getData(arraydata) {
               const loopedCases = [];
+            
 
               for (const cases of arraydata) {
                 console.log(cases.timeline.cases);
