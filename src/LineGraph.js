@@ -10,42 +10,72 @@ function LineGraph() {
           )
           .then((data) => {
             console.log('data',data);
-           // let dates = [];
-            let cases = [];
-            let deaths = [];
-            let recovered = [];
-           // let dataTotals;
-            for (let iteration = 0; iteration < data.length; iteration++) {
-              let totalIteration = iteration + 1;
-              cases.push(data[iteration].timeline.cases);
-              console.log('these are cases', cases)
-              // deaths.push(data[iteration].deaths);
-              // recovered.push(data[iteration].recovered);
-              // console.log("dat", totalIteration === data.length);
-              if (totalIteration === data.length) {
-                
-                // const casestotal = cases.reduce((total, currentValue) => {
-                //   return total + currentValue;
-                // });
+            let allGeneralDates = [];
+            let ugandanDataCases= [];
+            let kenyanDataCases = [];
+            let tanzaniaDataCases = [];
+            let rwandaDataCases = [];
+            let burundiDataCases = [];
 
-                // const deathstotal = deaths.reduce((total, currentValue) => {
-                //   return total + currentValue;
-                // });
-                // const recoveredtotal = recovered.reduce(
-                //   (total, currentValue) => {
-                //     console.log(total);
-                //     console.log("current", currentValue);
-                //     return total + currentValue;
-                //   }
-                // );
-                // dataTotals = {
-                //   cases: casestotal,
-                //   recovered: recoveredtotal,
-                //   deaths: deathstotal,
-                // };
-
-              }
+            function spiltData(dataToSplit, country){
+              console.log('the data and country', dataToSplit, country);
+              
+              if(allGeneralDates.length === 0) {
+                  let propertyDate = Object.keys(dataToSplit);
+                  console.log('these are dates',propertyDate);
+                  function getDataValues() {
+                    let dataValues = []
+                    for (const date of propertyDate) {
+                      console.log("these are spilt dataes", date);
+                      console.log("these are the numbers", dataToSplit[date]);
+                      dataValues.push(dataToSplit[date]);
+                    }
+                    return dataValues;
+                  }
+                  allGeneralDates.push(...propertyDate);
+                  if (country === 'Uganda'){
+                   let ugandaResults = getDataValues();
+                   ugandanDataCases.push(ugandaResults);
+                   console.log(" ugandanDataCases", ugandanDataCases);
+                  } else if (country === 'Kenya') {
+                    let kenyaResults = getDataValues();
+                    kenyanDataCases.push(kenyaResults);
+                  } else if (country === 'Tanzania') {
+                     let TanzaniaResults = getDataValues();
+                    tanzaniaDataCases.push(TanzaniaResults);
+                  } else if (country === "Rwanda") {
+                    let rwandaResults = getDataValues();
+                   rwandaDataCases.push(rwandaResults);
+                  } else if (country === "Burundi") {
+                    let burundiResults = getDataValues();
+                     burundiDataCases.push(burundiResults);
+                  }
+                } else {
+                  return
+                }
+              // for (const data of dataToSpilt) {
+              //   if(allGeneralDates.length === 0) {
+              //     let propertyDate = Object.keys(data);
+              //     console.log('these are dates',propertyDate);
+              //   } else {
+              //     return
+              //   }
+              // }
             }
+
+           function getData(arraydata) {
+              const loopedCases = [];
+
+              for (const cases of arraydata) {
+                console.log(cases.timeline.cases);
+                console.log(cases.country);
+                spiltData(cases.timeline.cases, cases.country)
+                loopedCases.push(cases)
+              }
+              return loopedCases;
+           }
+
+           console.log('getData()', getData(data));
           });
     }, [])
     return (
