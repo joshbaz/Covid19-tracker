@@ -2,33 +2,100 @@ import { FormControl, Select, MenuItem, Card, CardContent } from '@material-ui/c
 import React, { useEffect, useState } from 'react';
 import InfoBox from './infoBox';
 import Map from "./Map";
-
+import Table from "./Table"
+import { sortData } from "./util";
+import LineGraph from "./LineGraph"
 import './App.css';
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState('EastAfrica');
   const [countryInfo, setCountryInfo] = useState({});
+  const [tableData, setTableData] = useState([])
 
   //STATE = How to write a variable in react
   //USE effect = Runs a piece of code base on a given condititon
 
   useEffect(()=> {
-    
-  })
+    fetch("https://disease.sh/v3/covid-19/countries/UG,KE,TZ,RW,BI")
+    .then(response => response.json())
+    .then(data=> {
+      let todayCases = [];
+      let todayRecovered = [];
+      let todayDeaths = [];
+      let cases = [];
+      let deaths = [];
+      let recovered = [];
+      let dataTotals;
+      for (let iteration = 0; iteration < data.length; iteration++) {
+        let totalIteration = iteration + 1;
+        todayCases.push(data[iteration].todayCases);
+        todayRecovered.push(data[iteration].todayRecovered);
+        todayDeaths.push(data[iteration].todayDeaths);
+        cases.push(data[iteration].cases);
+        deaths.push(data[iteration].deaths);
+        recovered.push(data[iteration].recovered);
+        console.log('dat', totalIteration === data.length);
+        if (totalIteration === data.length) {
+          const casesToday = todayCases.reduce((total, currentValue) => {
+            return total + currentValue;
+          });
+
+          const casesRecovered = todayRecovered.reduce(
+            (total, currentValue) => {
+              return total + currentValue;
+            }
+          );
+
+          const casesDeaths = todayDeaths.reduce((total, currentValue) => {
+            return total + currentValue;
+          });
+
+          const casestotal = cases.reduce((total, currentValue) => {
+            return total + currentValue;
+          });
+
+          const deathstotal = deaths.reduce((total, currentValue) => {
+            return total + currentValue;
+          });
+          const recoveredtotal = recovered.reduce((total, currentValue) => {
+            console.log(total);
+            console.log("current", currentValue);
+            return total + currentValue;
+          });
+           dataTotals = {
+            cases: casestotal,
+            recovered: recoveredtotal,
+            deaths: deathstotal,
+            todayCases: casesToday,
+            todayDeaths: casesDeaths,
+            todayRecovered: casesRecovered,
+          };
+
+          
+          setCountryInfo(dataTotals);
+        } 
+      }
+
+     // setCountryInfo(dataTotals)
+    })
+  }, [])
 
   useEffect(() => {
     //the code inside here will run once 
     //when the component loads and not again
 
     const getCountriesData = async () => {
-       await fetch ('https://disease.sh/v3/covid-19/countries')
+       await fetch ('https://disease.sh/v3/covid-19/countries/UG,KE,TZ,RW,BI')
        .then((response)=> response.json())
        .then((data)=> {
          const countries = data.map((country)=> ({
            name: country.country,
            value: country.countryInfo.iso2,
          }));
+
+         const sortedData = sortData(data)
+         setTableData(sortedData)
          setCountries(countries);
        })
     }
@@ -47,7 +114,6 @@ function App() {
     await fetch (url)
     .then(response=> response.json())
     .then(data => {
-      console.log(data.length);
       if (data.length > 0 && data.length !== undefined) {
          let todayCases = [];
          let todayRecovered = [];
@@ -64,7 +130,6 @@ function App() {
            deaths.push(data[iteration].deaths);
            recovered.push(data[iteration].recovered);
 
-          console.log(iteration, data[iteration].cases);
           if (totalIteration === data.length) {
             const casesToday = todayCases.reduce((total, currentValue)=> {
               console.log(total);
@@ -198,8 +263,10 @@ function App() {
       <Card className="app__right">
         <CardContent>
           <h3> Live Cases by Country</h3>
+          <Table countries={tableData} />
           {/* Table */}
-          <h3>WorldWide new Cases</h3>
+          <h3>EastAfrica new Cases</h3>
+          <LineGraph />
           {/* Graph */}
         </CardContent>
       </Card>
