@@ -14,9 +14,11 @@ function App() {
   const [countryInfo, setCountryInfo] = useState({});
   const [tableData, setTableData] = useState([]);
 
-  let [mapCenter, setMapCenter] = useState({lat:-6, lng: 35.4796})
+  let [mapCenter, setMapCenter] = useState({lat:-1, lng: 37.4796})
   let [mapZoom, setMapZoom] = useState(5);
-  const [mapCountries, setMapCountries] = useState([])
+  const [mapCountries, setMapCountries] = useState([]);
+  const [casesType, setCasesType] = useState("cases");
+  
   //STATE = How to write a variable in react
   //USE effect = Runs a piece of code base on a given condititon
 
@@ -185,7 +187,8 @@ function App() {
 
             setCountry(countryCode);
             setCountryInfo(dataTotals);
-            setMapCenter([2.5, -5.66666]);
+            setMapCenter([-1, 39.4796]);
+            setMapZoom(5);
             
           }
          }
@@ -198,7 +201,7 @@ function App() {
         
         console.log('this 888', data.countryInfo.lat)
         setMapCenter( [data.countryInfo.lat, data.countryInfo.long] );
-        setMapZoom(4);
+        setMapZoom(6);
 
       }
      
@@ -219,9 +222,7 @@ function App() {
               value={country}
             >
               {/** Loop through all the countries and show a drop down list of the options*/}
-              <MenuItem value="EastAfrica">
-                EastAfrica
-              </MenuItem>
+              <MenuItem value="EastAfrica">EastAfrica</MenuItem>
               {countries.map((country) => (
                 <MenuItem value={country.value}>{country.name}</MenuItem>
               ))}
@@ -236,18 +237,30 @@ function App() {
 
         <div className="app__stats">
           <InfoBox
+            active={casesType === "cases"}
+            onClick={(e) => {
+              setCasesType("cases");
+            }}
             title="Coronavirus cases"
             cases={prettyPrintStat(countryInfo.todayCases)}
             total={prettyPrintStat(countryInfo.cases)}
           />
 
           <InfoBox
+            active={casesType === "recovered"}
+            onClick={(e) => {
+              setCasesType("recovered");
+            }}
             title="Recovered"
             cases={prettyPrintStat(countryInfo.todayRecovered)}
             total={prettyPrintStat(countryInfo.recovered)}
           />
 
           <InfoBox
+            active={casesType === "deaths"}
+            onClick={(e) => {
+              setCasesType("deaths");
+            }}
             title="Deaths"
             cases={prettyPrintStat(countryInfo.todayDeaths)}
             total={prettyPrintStat(countryInfo.deaths)}
@@ -258,7 +271,12 @@ function App() {
         </div>
 
         {/* Map */}
-        <Map countries={mapCountries} center={mapCenter} zoom={mapZoom} />
+        <Map
+          countries={mapCountries}
+          casesType={casesType}
+          center={mapCenter}
+          zoom={mapZoom}
+        />
       </div>
 
       <Card className="app__right">
@@ -266,8 +284,8 @@ function App() {
           <h3> Live Cases by Country</h3>
           <Table countries={tableData} />
           {/* Table */}
-          <h3>EastAfrica new Cases</h3>
-          <LineGraph className="graph"/>
+          <h3>EastAfrica new {casesType}</h3>
+          <LineGraph casesType={casesType} />
           {/* Graph */}
         </CardContent>
       </Card>

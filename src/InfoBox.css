@@ -1,6 +1,7 @@
 .infoBox {
   flex: 1;
   background-color: rgb(73, 70, 70) !important;
+  cursor: pointer;
 }
 
 .infoBox:not(:last-child) {
@@ -14,6 +15,11 @@
      font-size: 1.2rem !important;
 }
 
+.infoBox--selected {
+   box-shadow: 
+   1px 1px 10px 3px rgb(172, 24, 24),
+   inset 0 -2em 3em rgba(114, 78, 78, 0.639) !important;
+}
 
 
 .infoBox__cases {
@@ -34,6 +40,7 @@
        flex: 1;
   background-color: rgb(73, 70, 70) !important;
   align-items: flex-end !important;
+  cursor: pointer;
 }
 .infoBox__title {
     color: rgb(229, 223, 238) !important;

@@ -47,26 +47,69 @@ const options = {
   },
 };
 
-  const buildChartData = (data1, date, casesType) => {
-    console.log("the whole datainsdo", data1);
+  const buildChartData = (data1,data2,data3, date, casesTypes) => {
+    console.log("the whole datainsdo", data1, data2, data3, casesTypes);
     const chartData = [];
     let lastDataPoint;
-    for (let iteration = 0; iteration< data1.length; iteration++) {
-      console.log("the whole datainsdosss", data1[iteration], date[iteration]);
-      if (lastDataPoint) {
-        let newDataPoint = {
-          x: date[iteration],
-          y: data1[iteration] - lastDataPoint,
-        };
+    if (casesTypes === "cases") {
+       for (let iteration = 0; iteration < data1.length; iteration++) {
+         console.log(
+           "the whole cases datainsdosss",
+           data1[iteration],
+           date[iteration]
+         );
+         if (lastDataPoint) {
+           let newDataPoint = {
+             x: date[iteration],
+             y: data1[iteration] - lastDataPoint,
+           };
 
-        //console.log("the whole datainsdo", data.cases);
-        chartData.push(newDataPoint);
-      }
-      lastDataPoint = data1[iteration];
+           //console.log("the whole datainsdo", data.cases);
+           chartData.push(newDataPoint);
+         }
+         lastDataPoint = data1[iteration];
+       }
+    } else if (casesTypes ==="recovered") {
+       for (let iteration = 0; iteration < data2.length; iteration++) {
+         console.log(
+           "the whole datainsdosss",
+           data2[iteration],
+           date[iteration]
+         );
+         if (lastDataPoint) {
+           let newDataPoint = {
+             x: date[iteration],
+             y: data2[iteration] - lastDataPoint,
+           };
+
+           //console.log("the whole datainsdo", data.cases);
+           chartData.push(newDataPoint);
+         }
+         lastDataPoint = data2[iteration];
+       }
+    } else if(casesTypes ==="deaths") {
+       for (let iteration = 0; iteration < data3.length; iteration++) {
+         console.log(
+           "the whole datainsdosss",
+           data3[iteration],
+           date[iteration]
+         );
+         if (lastDataPoint) {
+           let newDataPoint = {
+             x: date[iteration],
+             y: data3[iteration] - lastDataPoint,
+           };
+
+           //console.log("the whole datainsdo", data.cases);
+           chartData.push(newDataPoint);
+         }
+         lastDataPoint = data3[iteration];
+       }
     }
+   
     return chartData;
   };
-function LineGraph() {
+function LineGraph({casesType}) {
     const [data, setData] = useState({});
 
     useEffect(()=> {
@@ -413,14 +456,14 @@ function LineGraph() {
               allGeneralDates,
               "recovered"
             );
-              console.log('all object data', allObjectData)
-            let chartData = buildChartData(alldataCasesArray, allGeneralDates, "cases");
+              console.log('all object data', allObjectData, casesType)
+            let chartData = buildChartData(alldataCasesArray,allRecoveredCasesArray, allDeathsCasesArray, allGeneralDates, casesType);
             setData(chartData);
           });
       }
 
         fetchData();
-    }, [])
+    }, [casesType])
 
    
     return (
