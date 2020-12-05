@@ -1,8 +1,10 @@
 .table {
     margin-top: 20px;
     overflow: scroll;
-    height: 150px;
-    color: #6a5d5d;
+    height: 200px;
+    color: #0c060677;
+    font-weight: bold;
+    font-size: 17px;
 }
 
 .table tr {
@@ -15,5 +17,5 @@
 }
 
 .table tr:nth-of-type(odd){
-    background-color:#f3f2f8;
+    background-color:#8a9ea0;
 }

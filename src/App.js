@@ -3,16 +3,20 @@ import React, { useEffect, useState } from 'react';
 import InfoBox from './infoBox';
 import Map from "./Map";
 import Table from "./Table"
-import { sortData } from "./util";
-import LineGraph from "./LineGraph"
+import { sortData, prettyPrintStat } from "./util";
+import LineGraph from "./LineGraph";
+import "leaflet/dist/leaflet.css";
 import './App.css';
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState('EastAfrica');
   const [countryInfo, setCountryInfo] = useState({});
-  const [tableData, setTableData] = useState([])
+  const [tableData, setTableData] = useState([]);
 
+  let [mapCenter, setMapCenter] = useState({lat:-6, lng: 35.4796})
+  let [mapZoom, setMapZoom] = useState(5);
+  const [mapCountries, setMapCountries] = useState([])
   //STATE = How to write a variable in react
   //USE effect = Runs a piece of code base on a given condititon
 
@@ -74,6 +78,7 @@ function App() {
 
           
           setCountryInfo(dataTotals);
+          
         } 
       }
 
@@ -96,6 +101,7 @@ function App() {
 
          const sortedData = sortData(data)
          setTableData(sortedData)
+         setMapCountries(data)
          setCountries(countries);
        })
     }
@@ -114,6 +120,7 @@ function App() {
     await fetch (url)
     .then(response=> response.json())
     .then(data => {
+      //console.log('country info',data.country, data.countryInfo.lat)
       if (data.length > 0 && data.length !== undefined) {
          let todayCases = [];
          let todayRecovered = [];
@@ -178,33 +185,25 @@ function App() {
 
             setCountry(countryCode);
             setCountryInfo(dataTotals);
-             
+            setMapCenter([2.5, -5.66666]);
+            
           }
          }
       } else {
+        
+        console.log("country info", data.country, data.countryInfo.lat, data.countryInfo.long);
         console.log('this is data else where', data);
         setCountry(countryCode);
         setCountryInfo(data)
+        
+        console.log('this 888', data.countryInfo.lat)
+        setMapCenter( [data.countryInfo.lat, data.countryInfo.long] );
+        setMapZoom(4);
+
       }
      
     })
-    // if (countryCode === 'EastAfrica') {
-    //   // const EastAfricanData = async (coun1, coun2, coun3, coun4) => {
-    //   //   await fetch(
-    //   //     `https://disease.sh/v3/covid-19/countries/${coun1},${coun2},${coun3},${coun4}`
-    //   //   )
-    //   //     .then((response) => response.json())
-    //   //     .then((data) => {
-    //   //       console.log("all the data taking part", data);
-    //   //     });
-    //   // };
-    //   //  EastAfricanData('UG', 'TZ', 'RW', 'BI' );
-
-      
-      
-    // }
-    //  https://disease.sh/v3/covid-19/all
-    // https://disease.sh/v3/covid-19/countries/[COUNTRY_CODE]
+  
   }
 
   return (
@@ -220,7 +219,9 @@ function App() {
               value={country}
             >
               {/** Loop through all the countries and show a drop down list of the options*/}
-              <MenuItem value="EastAfrica">EastAfrica</MenuItem>
+              <MenuItem value="EastAfrica">
+                EastAfrica
+              </MenuItem>
               {countries.map((country) => (
                 <MenuItem value={country.value}>{country.name}</MenuItem>
               ))}
@@ -236,20 +237,20 @@ function App() {
         <div className="app__stats">
           <InfoBox
             title="Coronavirus cases"
-            cases={countryInfo.todayCases}
-            total={countryInfo.cases}
+            cases={prettyPrintStat(countryInfo.todayCases)}
+            total={prettyPrintStat(countryInfo.cases)}
           />
 
           <InfoBox
             title="Recovered"
-            cases={countryInfo.todayRecovered}
-            total={countryInfo.recovered}
+            cases={prettyPrintStat(countryInfo.todayRecovered)}
+            total={prettyPrintStat(countryInfo.recovered)}
           />
 
           <InfoBox
             title="Deaths"
-            cases={countryInfo.todayDeaths}
-            total={countryInfo.deaths} 
+            cases={prettyPrintStat(countryInfo.todayDeaths)}
+            total={prettyPrintStat(countryInfo.deaths)}
           />
           {/* InfoBoxes */}
           {/* InfoBoxes */}
@@ -257,7 +258,7 @@ function App() {
         </div>
 
         {/* Map */}
-        <Map />
+        <Map countries={mapCountries} center={mapCenter} zoom={mapZoom} />
       </div>
 
       <Card className="app__right">
@@ -266,7 +267,7 @@ function App() {
           <Table countries={tableData} />
           {/* Table */}
           <h3>EastAfrica new Cases</h3>
-          <LineGraph />
+          <LineGraph className="graph"/>
           {/* Graph */}
         </CardContent>
       </Card>
