@@ -1,7 +1,7 @@
 import React from 'react'
 import './InfoBox.css';
 import { Card, CardContent, Typography } from "@material-ui/core";
-// we are passing in the props inside of the function body
+
 function infoBox({  active, title, cases, total, ...props}) {
     return (
       <Card 

@@ -48,34 +48,26 @@ const options = {
 };
 
   const buildChartData = (data1,data2,data3, date, casesTypes) => {
-    console.log("the whole datainsdo", data1, data2, data3, casesTypes);
+    
     const chartData = [];
     let lastDataPoint;
     if (casesTypes === "cases") {
        for (let iteration = 0; iteration < data1.length; iteration++) {
-         console.log(
-           "the whole cases datainsdosss",
-           data1[iteration],
-           date[iteration]
-         );
+        
          if (lastDataPoint) {
            let newDataPoint = {
              x: date[iteration],
              y: data1[iteration] - lastDataPoint,
            };
 
-           //console.log("the whole datainsdo", data.cases);
+           
            chartData.push(newDataPoint);
          }
          lastDataPoint = data1[iteration];
        }
     } else if (casesTypes ==="recovered") {
        for (let iteration = 0; iteration < data2.length; iteration++) {
-         console.log(
-           "the whole datainsdosss",
-           data2[iteration],
-           date[iteration]
-         );
+        
          if (lastDataPoint) {
            let newDataPoint = {
              x: date[iteration],
@@ -89,18 +81,13 @@ const options = {
        }
     } else if(casesTypes ==="deaths") {
        for (let iteration = 0; iteration < data3.length; iteration++) {
-         console.log(
-           "the whole datainsdosss",
-           data3[iteration],
-           date[iteration]
-         );
+        
          if (lastDataPoint) {
            let newDataPoint = {
              x: date[iteration],
              y: data3[iteration] - lastDataPoint,
            };
 
-           //console.log("the whole datainsdo", data.cases);
            chartData.push(newDataPoint);
          }
          lastDataPoint = data3[iteration];
@@ -117,7 +104,6 @@ function LineGraph({casesType, ...props}) {
         await fetch("https://disease.sh/v3/covid-19/historical/UG,TZ,KE,RW,BI")
           .then((response) => response.json())
           .then((data) => {
-            console.log("data", data);
             let allObjectData = {};
             let alldataCasesArray = [];
             let allRecoveredCasesArray = [];
@@ -146,7 +132,6 @@ function LineGraph({casesType, ...props}) {
             let objectRecoveredCases = {};
 
             function spiltData(dataToSplit, country, type) {
-              console.log("the data and country", dataToSplit, country);
               //cases
               if (type === "cases") {
                 if (allGeneralDates.length === 0) {
@@ -327,8 +312,8 @@ function LineGraph({casesType, ...props}) {
               }
               return loopedCases;
             }
-            console.log("getData()", getData(data));
-            console.log("this is the expected-data", ugandanDeathCases);
+             getData(data);
+            
 
             //Totals recieved
             function getTotals(
@@ -342,7 +327,6 @@ function LineGraph({casesType, ...props}) {
             ) {
               let length = array1.length;
 
-              console.log("thisis array1", array1, length);
               if (type === "cases") {
                 let thedates = dates;
                 for (let iteration = 0; iteration < length; iteration++) {
@@ -359,14 +343,13 @@ function LineGraph({casesType, ...props}) {
                     writable: true
                   });
 
-                  console.log("------", length === iterations);
                   if (length === iterations) {
-                    console.log('my all data aArray', alldataCasesArray)
+                    
                     Object.defineProperty(allObjectData, "cases", {
                       value: objectCases,
                       writable: true,
                     });
-                    console.log("allObjectData", allObjectData);
+                    
                   }
                 }
               } else if (type === "deaths") {
@@ -395,7 +378,7 @@ function LineGraph({casesType, ...props}) {
                       value: objectDeaths,
                       writable: true,
                     });
-                    console.log("Deaths added to overall", allObjectData);
+                    
                   }
                 }
               } else if (type === "recovered") {
@@ -423,7 +406,7 @@ function LineGraph({casesType, ...props}) {
                       value: objectRecoveredCases,
                       writable: true,
                     });
-                    console.log("recovered added to overall", allObjectData);
+                    
                   }
                 }
               }
@@ -456,7 +439,7 @@ function LineGraph({casesType, ...props}) {
               allGeneralDates,
               "recovered"
             );
-              console.log('all object data', allObjectData, casesType)
+              
             let chartData = buildChartData(alldataCasesArray,allRecoveredCasesArray, allDeathsCasesArray, allGeneralDates, casesType);
             setData(chartData);
           });

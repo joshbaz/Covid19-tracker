@@ -16,8 +16,12 @@ body {
   color: rgb(115, 72, 170);
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   justify-content: space-between;
+}
+.app__creator {
+  color: rgb(115, 72, 170);
+  margin:20px;
 }
 .app__dropdown {
   background-color: rgb(229, 229, 233) !important;

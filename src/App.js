@@ -41,7 +41,6 @@ function App() {
         cases.push(data[iteration].cases);
         deaths.push(data[iteration].deaths);
         recovered.push(data[iteration].recovered);
-        console.log('dat', totalIteration === data.length);
         if (totalIteration === data.length) {
           const casesToday = todayCases.reduce((total, currentValue) => {
             return total + currentValue;
@@ -65,8 +64,7 @@ function App() {
             return total + currentValue;
           });
           const recoveredtotal = recovered.reduce((total, currentValue) => {
-            console.log(total);
-            console.log("current", currentValue);
+            
             return total + currentValue;
           });
            dataTotals = {
@@ -113,7 +111,6 @@ function App() {
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
 
-    console.log("This is my country Now", countryCode);
     setCountry(countryCode);
    const url =
      countryCode === "EastAfrica"
@@ -122,7 +119,6 @@ function App() {
     await fetch (url)
     .then(response=> response.json())
     .then(data => {
-      //console.log('country info',data.country, data.countryInfo.lat)
       if (data.length > 0 && data.length !== undefined) {
          let todayCases = [];
          let todayRecovered = [];
@@ -148,32 +144,25 @@ function App() {
 
             const casesRecovered = todayRecovered.reduce(
               (total, currentValue) => {
-                console.log(total);
-                console.log("current", currentValue);
                 return total + currentValue;
               }
             );
 
             const casesDeaths = todayDeaths.reduce((total, currentValue) => {
-              console.log(total);
-              console.log("current", currentValue);
               return total + currentValue;
             });
 
             const casestotal = cases.reduce((total, currentValue) => {
-              console.log(total);
-              console.log("current cases", currentValue);
+              
               return total + currentValue;
             });
 
             const deathstotal = deaths.reduce((total, currentValue) => {
-              console.log(total);
-              console.log("current", currentValue);
+              
               return total + currentValue;
             });
              const recoveredtotal = recovered.reduce((total, currentValue) => {
-               console.log(total);
-               console.log("current", currentValue);
+               
                return total + currentValue;
              });
              let dataTotals = {
@@ -194,12 +183,9 @@ function App() {
          }
       } else {
         
-        console.log("country info", data.country, data.countryInfo.lat, data.countryInfo.long);
-        console.log('this is data else where', data);
         setCountry(countryCode);
         setCountryInfo(data)
         
-        console.log('this 888', data.countryInfo.lat)
         setMapCenter( [data.countryInfo.lat, data.countryInfo.long] );
         setMapZoom(6);
 
@@ -226,13 +212,13 @@ function App() {
               {countries.map((country) => (
                 <MenuItem value={country.value}>{country.name}</MenuItem>
               ))}
-              {/**
-               <MenuItem value="WorldWide">WorldWide</MenuItem>
-            <MenuItem value="WorldWide">Option 1</MenuItem>
-            <MenuItem value="WorldWide">Option 2</MenuItem>
-          */}
+            
             </Select>
           </FormControl>
+        </div>
+        <div className="app__creator">
+          <h5>@kimbareeba_joshua</h5>
+
         </div>
 
         <div className="app__stats">
@@ -265,9 +251,7 @@ function App() {
             cases={prettyPrintStat(countryInfo.todayDeaths)}
             total={prettyPrintStat(countryInfo.deaths)}
           />
-          {/* InfoBoxes */}
-          {/* InfoBoxes */}
-          {/* InfoBoxes */}
+         
         </div>
 
         {/* Map */}
@@ -283,10 +267,8 @@ function App() {
         <CardContent>
           <h3> Live Cases by Country</h3>
           <Table countries={tableData} />
-          {/* Table */}
           <h3 className="app__graphTitle">EastAfrica new {casesType}</h3>
           <LineGraph className="app__graph" casesType={casesType} />
-          {/* Graph */}
         </CardContent>
       </Card>
     </div>
